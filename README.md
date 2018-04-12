@@ -1,1 +1,3 @@
-A site where you can add YouTube videos on one page!  Code still in progress - not part of actual project submission
+A site where you can add YouTube videos on one page and see the time duration for each video!  JS and HTML in one file, CSS in a separate file.  Code still in progress...  
+
+Please note that this is additional to the Tripify project submission, and that the core project is for the Google Maps and Eventful APIs

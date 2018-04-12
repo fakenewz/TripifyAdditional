@@ -1,1 +1,1 @@
-# TripifyAdditional
+A site where you can add YouTube videos on one page!  Code still in progress - not part of actual project submission

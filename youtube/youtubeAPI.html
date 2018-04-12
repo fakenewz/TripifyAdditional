@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>YouTube API</title>
+
+<link rel="stylesheet" type="text/css" href="./style.css">
+  
+</head>
+
+<body>
+
+    <div class="tubeContainer">
+            
+        <h1>Choose a Video!</h1>
+            <br>
+            <div id="tubeView"></div>
+            
+            <form id="tubeForm">
+                <label for="tubeInput">Look at this:</label>
+                <input type="text" id="tubeInput">
+                <br><br>
+            
+            <input id="tubeAdd" type="submit" value="Video">
+                <br><br>
+            </form>
+<div id="videoContainer">
+        <div id="test">
+
+</div>  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+  <script type="text/javascript">
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
+
+    function convertISO8601ToSeconds(input) {
+
+    var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
+    var hours = 0, minutes = 0, seconds = 0, totalseconds;
+
+    if (reptms.test(input)) {
+        var matches = reptms.exec(input);
+        if (matches[1]) hours = Number(matches[1]);
+        if (matches[2]) minutes = Number(matches[2]);
+        if (matches[3]) seconds = Number(matches[3]);
+        totalseconds = hours * 3600  + minutes * 60 + seconds;
+    }
+        return  minutes + ":" + seconds;
+    }
+
+  $("#tubeAdd").on("click", function(event) {
+    event.preventDefault();
+   
+    var videoNameTest = $("#tubeInput").val();
+    var queryURL = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + videoNameTest + "&part=contentDetails&key=AIzaSyClwpSzwH9DiSaeuX80Eus-7SKpHV3oVe0";
+
+    $.ajax({
+      url: queryURL,
+      method: "GET"
+    }).then(function(response) {  
+      console.log(response)
+      console.log(response.items[0].id.videoId);
+      var url = response.items[0].id.videoId;
+      var newURL = "https://www.youtube.com/embed/" + url;
+      var testURL = "https://www.googleapis.com/youtube/v3/videos?id=" + url + "&part=contentDetails&key=AIzaSyClwpSzwH9DiSaeuX80Eus-7SKpHV3oVe0"
+
+            $.ajax({
+            url: testURL,
+            method: "GET"
+            }).then(function(x) {
+                console.log(x);
+                console.log(x.items[0].contentDetails.duration); 
+                
+                var player;
+                function onYouTubeIframeAPIReady() {
+                $("#videoContainer").append("<iframe src='" + newURL + "' />");
+                player = new YT.Player('videoContainer', {
+                async: false,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                videoId: url,
+                events: {
+                    'onReady': onPlayerReady,
+                   'onStateChange': onPlayerStateChange
+                    }
+                });
+            }
+
+            var vidDuration = x.items[0].contentDetails.duration;
+            var convertedTime = convertISO8601ToSeconds(vidDuration);
+            $("#videoContainer").append("Time Duration of Video: " + convertedTime);
+
+            onYouTubeIframeAPIReady();
+            
+            function onPlayerReady(ev) {
+            ev.target.playVideo();
+            }
+           });
+          });
+        });
+    
+        </script>
+    </body>
+</html>

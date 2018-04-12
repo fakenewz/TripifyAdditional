@@ -1,0 +1,19 @@
+body {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: tan;
+}
+
+h1 {
+    color: pink;
+}
+
+#videoContainer {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+/*
+#tripTime1, #tripTime2 {
+    width: 50px;
+}*/
